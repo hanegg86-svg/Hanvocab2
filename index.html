@@ -45,20 +45,19 @@
             border: 1px solid #ccc;
             border-radius: 6px;
         }
-        #preview {
-            max-width: 100%;
-            margin-top: 15px;
-            border-radius: 8px;
-            display: none;
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         button {
-            width: 100%;
+            flex: 1;
             padding: 12px;
             background-color: #27ae60;
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             font-weight: bold;
             transition: background 0.3s;
@@ -69,6 +68,31 @@
         button:disabled {
             background-color: #bdc3c7;
             cursor: not-allowed;
+        }
+        .btn-camera {
+            background-color: #2980b9;
+        }
+        .btn-camera:hover {
+            background-color: #1f618d;
+        }
+        .btn-capture {
+            background-color: #e67e22;
+        }
+        .btn-capture:hover {
+            background-color: #d35400;
+        }
+        #webcam {
+            width: 100%;
+            border-radius: 8px;
+            display: none;
+            margin-top: 10px;
+            background-color: #000;
+        }
+        #preview {
+            max-width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+            display: none;
         }
         #result {
             margin-top: 25px;
@@ -123,6 +147,13 @@
         <input type="file" id="imageInput" accept="image/*">
     </div>
 
+    <div class="btn-group">
+        <button type="button" class="btn-camera" id="startCamBtn" onclick="startCamera()">📷 เปิดกล้องถ่ายภาพ</button>
+        <button type="button" class="btn-capture" id="captureBtn" onclick="capturePhoto()" style="display: none;">📸 ถ่ายรูป</button>
+    </div>
+
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="canvas" style="display: none;"></canvas>
     <img id="preview" alt="ตัวอย่างรูปภาพ">
 
     <button id="analyzeBtn" onclick="analyzeMushroom()" style="margin-top: 15px;">วิเคราะห์เห็ด</button>
@@ -141,9 +172,16 @@
 <script>
     const imageInput = document.getElementById('imageInput');
     const preview = document.getElementById('preview');
+    const webcam = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const startCamBtn = document.getElementById('startCamBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    
     let base64Image = "";
+    let mediaStream = null;
 
     imageInput.addEventListener('change', function(e) {
+        stopCamera();
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -156,6 +194,48 @@
         }
     });
 
+    async function startCamera() {
+        try {
+            preview.style.display = 'none';
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+                audio: false
+            });
+            webcam.srcObject = mediaStream;
+            webcam.style.display = 'block';
+            startCamBtn.style.display = 'none';
+            captureBtn.style.display = 'block';
+        } catch (err) {
+            alert('ไม่สามารถเข้าถึงกล้องได้: ' + err.message);
+        }
+    }
+
+    function capturePhoto() {
+        if (!mediaStream) return;
+        
+        canvas.width = webcam.videoWidth;
+        canvas.height = webcam.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+        
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        preview.src = dataUrl;
+        preview.style.display = 'block';
+        base64Image = dataUrl.split(',')[1];
+        
+        stopCamera();
+    }
+
+    function stopCamera() {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+            mediaStream = null;
+        }
+        webcam.style.display = 'none';
+        startCamBtn.style.display = 'block';
+        captureBtn.style.display = 'none';
+    }
+
     async function analyzeMushroom() {
         const apiKey = document.getElementById('apiKey').value.trim();
         const analyzeBtn = document.getElementById('analyzeBtn');
@@ -167,7 +247,7 @@
         }
 
         if (!base64Image) {
-            alert('กรุณาเลือกรูปภาพเห็ด');
+            alert('กรุณาเลือกรูปภาพหรือถ่ายรูปเห็ด');
             return;
         }
 
