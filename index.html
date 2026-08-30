@@ -2,502 +2,253 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>บันทึกรักถึงแม่</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushroom Identifier AI</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Charm:wght@700&family=Sarabun:wght@400;600;700&display=swap');
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
         body {
-            font-family: 'Sarabun', sans-serif;
-            background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca);
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            color: #334155;
-        }
-
-        /* Controls Area */
-        .header-controls {
-            display: flex;
-            gap: 12px;
-            z-index: 10;
             justify-content: center;
-            align-items: center;
+        }
+        .container {
+            max-width: 600px;
             width: 100%;
-            flex-shrink: 0;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-
-        .btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 10px 20px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            border-radius: 30px;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Sarabun', sans-serif;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: translateY(-2px);
-        }
-
-        .btn-music {
-            background: #f43f5e;
-            color: white;
-            border: none;
-        }
-
-        .btn-music.playing {
-            background: #fb7185;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(251, 113, 133, 0.7); }
-            70% { box-shadow: 0 0 0 14px rgba(251, 113, 133, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(251, 113, 133, 0); }
-        }
-
-        /* App Container & Adaptive Cards */
-        .app-container {
-            width: 100%;
-            max-width: 440px;
-            height: min(78dvh, 680px);
-            position: relative;
-            perspective: 1200px;
-            margin: auto 0;
-        }
-
-        .card {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #fffdfa;
-            border-radius: 20px;
-            padding: 18px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            border: 1px solid #f1f5f9;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
-            transform-origin: left center;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .card.active {
-            opacity: 1;
-            transform: rotateY(0deg);
-            pointer-events: auto;
-            z-index: 5;
-        }
-
-        .card.prev {
-            opacity: 0;
-            transform: rotateY(-90deg);
-            z-index: 1;
-        }
-
-        .card.cover {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
-            color: white;
+        h1 {
             text-align: center;
-            justify-content: center;
-            align-items: center;
-            border: 3px solid #fef08a;
-        }
-
-        .cover-border {
-            border: 2px dashed rgba(255, 255, 255, 0.5);
-            border-radius: 14px;
-            padding: 20px 15px;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .cover h1 {
-            font-family: 'Charm', cursive;
-            font-size: 3.2rem;
-            margin-bottom: 12px;
-            color: #fef08a;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .cover p {
-            font-size: 1.35rem;
-            font-weight: 400;
-            line-height: 1.5;
+            color: #2c3e50;
             margin-bottom: 20px;
         }
-
-        .page-title {
-            font-family: 'Charm', cursive;
-            font-size: 2.1rem;
-            color: #4f46e5;
-            text-align: center;
-            border-bottom: 2px dashed #cbd5e1;
-            padding-bottom: 4px;
-            flex-shrink: 0;
+        .form-group {
+            margin-bottom: 15px;
         }
-
-        .photo-container {
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="file"] {
             width: 100%;
-            flex: 1;
-            min-height: 0;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-            border: 4px solid #ffffff;
-            background: #f8fafc;
-            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
         }
-
-        .photo-container img {
+        #preview {
+            max-width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        button {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
         }
-
-        .text-container {
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: #fff1f2;
-            border-radius: 12px;
-            padding: 10px 14px;
-            border: 1px solid #ffe4e6;
-            margin-bottom: 6px;
+        button:hover {
+            background-color: #219150;
         }
-
-        .text-container p {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b;
-            line-height: 1.45;
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
         }
-
-        .page-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #64748b;
-            flex-shrink: 0;
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
         }
-
-        .bottom-nav {
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-            flex-shrink: 0;
+        .safe {
+            background-color: #e8f8f5;
+            border: 1px solid #2ecc71;
+            color: #27ae60;
         }
-
-        .floating-heart {
-            position: fixed;
-            color: rgba(244, 63, 94, 0.3);
-            font-size: 22px;
-            animation: floatUp 8s linear infinite;
-            pointer-events: none;
-            z-index: 0;
+        .caution {
+            background-color: #fef9e7;
+            border: 1px solid #f1c40f;
+            color: #d35400;
         }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        .toxic {
+            background-color: #fadbd8;
+            border: 1px solid #e74c3c;
+            color: #c0392b;
         }
-
-        @media (min-width: 600px) and (min-height: 700px) {
-            .app-container {
-                max-width: 520px;
-                height: min(80dvh, 760px);
-            }
-            .page-title { font-size: 2.5rem; }
-            .text-container p { font-size: 1.45rem; }
-            .btn { font-size: 1.2rem; padding: 12px 28px; }
+        .result-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .result-item {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .disclaimer {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #7f8c8d;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
 
-    <div id="heartsContainer"></div>
+<div class="container">
+    <h1>🍄 สารานุกรม & วิเคราะห์เห็ด AI</h1>
 
-    <div class="header-controls">
-        <button class="btn btn-music" id="musicBtn" onclick="togglePianoMusic()">
-            🎹 เปิดเพลงเปียโนบรรเลงซึ้งๆ
-        </button>
+    <div class="form-group">
+        <label for="apiKey">Gemini API Key:</label>
+        <input type="text" id="apiKey" placeholder="วาง API Key ของคุณที่นี่">
     </div>
 
-    <div class="app-container">
-
-        <!-- หน้า 0: ปกหน้า -->
-        <div class="card cover active" id="card-0">
-            <div class="cover-border">
-                <div style="font-size: 3.8rem; margin-bottom: 8px;">🌸</div>
-                <h1>บันทึกรักถึงแม่</h1>
-                <p>ของขวัญแทนใจ<br>ด้วยความรักสุดหัวใจ</p>
-                <span style="font-size: 1.05rem; color: #fef08a;">✨ กดปุ่มด้านล่างเพื่อเปิดอ่าน ✨</span>
-            </div>
-        </div>
-
-        <!-- หน้า 1 -->
-        <div class="card" id="card-1">
-            <h2 class="page-title">สุดสวยอยู่เสมอ</h2>
-            <div class="photo-container">
-                <img src="mom1.jpg" alt="สุดสวยอยู่เสมอ">
-            </div>
-            <div class="text-container">
-                <p>"ขอบคุณสำหรับความรัก ความอาทร<br>และอบอุ่นที่มีให้เสมอมา"</p>
-            </div>
-            <div class="page-footer">
-                <span>ความทรงจำแสนหวาน</span>
-                <span>1 / 5</span>
-            </div>
-        </div>
-
-        <!-- หน้า 2 -->
-        <div class="card" id="card-2">
-            <h2 class="page-title">รักอันกว้างใหญ่</h2>
-            <div class="photo-container">
-                <img src="mom2.jpg" alt="รักอันกว้างใหญ่">
-            </div>
-            <div class="text-container">
-                <p>"ขอให้แม่อยู่เป็นร่มโพธิ์ร่มไทร<br>และเป็นกำลังใจให้ลูกเสมอไปนะจ๊ะ"</p>
-            </div>
-            <div class="page-footer">
-                <span>สายลมและแสงแดด</span>
-                <span>2 / 5</span>
-            </div>
-        </div>
-
-        <!-- หน้า 3 -->
-        <div class="card" id="card-3">
-            <h2 class="page-title">รักในสายหมอก</h2>
-            <div class="photo-container">
-                <img src="mom3.jpg" alt="รักในสายหมอก">
-            </div>
-            <div class="text-container">
-                <p>"ขอบคุณที่คอยดูแลและซัพพอร์ต<br>ลูกในทุกๆ ช่วงเวลาของชีวิตนะจ๊ะ"</p>
-            </div>
-            <div class="page-footer">
-                <span>ความรักอันยิ่งใหญ่</span>
-                <span>3 / 5</span>
-            </div>
-        </div>
-
-        <!-- หน้า 4 -->
-        <div class="card" id="card-4">
-            <h2 class="page-title">แม่สวยในสวนสวย</h2>
-            <div class="photo-container">
-                <img src="mom4.jpg" alt="แม่สวยในสวนสวย">
-            </div>
-            <div class="text-container">
-                <p>"ขอให้แม่มีความสุขในทุกๆ วัน<br>ยิ้มสดใส และมีสุขภาพแข็งแรงจ้ะ"</p>
-            </div>
-            <div class="page-footer">
-                <span>ความสุขอันงดงาม</span>
-                <span>4 / 5</span>
-            </div>
-        </div>
-
-        <!-- หน้า 5 -->
-        <div class="card" id="card-5">
-            <h2 class="page-title">รอยยิ้มของแม่</h2>
-            <div class="photo-container">
-                <img src="mom5.jpg" alt="รอยยิ้มของแม่">
-            </div>
-            <div class="text-container">
-                <p>"ขอให้แม่สุขภาพแข็งแรง<br>ได้พักผ่อนและมีความสุขมากๆ นะจ๊ะ"</p>
-            </div>
-            <div class="page-footer">
-                <span>วันพักผ่อนของแม่</span>
-                <span>5 / 5</span>
-            </div>
-        </div>
-
-        <!-- หน้า 6: ปกหลัง -->
-        <div class="card cover" id="card-6">
-            <div class="cover-border">
-                <div style="font-size: 3.8rem; margin-bottom: 8px;">❤️</div>
-                <h1 style="font-size: 2.6rem;">สุขสันต์วันแม่</h1>
-                <p style="font-size: 1.25rem; color: #ffffff; margin-bottom: 15px;">
-                    รักแม่สุดหัวใจ<br>กราบขอบพระคุณทุกสิ่งทุกอย่างครับ
-                </p>
-                <button class="btn" onclick="goToPage(0)" style="background: #fef08a; color: #1e1b4b; border: none; font-weight: 700;">
-                    🔄 อ่านใหม่อีกครั้ง
-                </button>
-            </div>
-        </div>
-
+    <div class="form-group">
+        <label for="imageInput">เลือกรูปภาพเห็ด:</label>
+        <input type="file" id="imageInput" accept="image/*">
     </div>
 
-    <div class="bottom-nav">
-        <button class="btn" onclick="prevCard()">◀ ย้อนกลับ</button>
-        <button class="btn" onclick="nextCard()">ถัดไป ▶</button>
-    </div>
+    <img id="preview" alt="ตัวอย่างรูปภาพ">
 
-    <script>
-        // Floating Elements
-        const heartsContainer = document.getElementById('heartsContainer');
-        const icons = ['🌸', '🤍', '💖', '✨', '🌺'];
-        for (let i = 0; i < 15; i++) {
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.innerText = icons[Math.floor(Math.random() * icons.length)];
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
-            heart.style.animationDelay = Math.random() * 5 + 's';
-            heartsContainer.appendChild(heart);
+    <button id="analyzeBtn" onclick="analyzeMushroom()" style="margin-top: 15px;">วิเคราะห์เห็ด</button>
+
+    <div id="result">
+        <div class="result-title" id="resName"></div>
+        <div class="result-item"><strong>ชื่อวิทยาศาสตร์:</strong> <span id="resSciName"></span></div>
+        <div class="result-item"><strong>ระดับความปลอดภัย:</strong> <span id="resSafety"></span></div>
+        <div class="result-item"><strong>ลักษณะสำคัญ:</strong> <span id="resFeatures"></span></div>
+        <div class="result-item"><strong>เห็ดที่ลักษณะคล้ายกัน (อันตราย):</strong> <span id="resLookalike"></span></div>
+        <div class="result-item"><strong>ข้อมูลโภชนาการ/การนำไปใช้:</strong> <span id="resUsage"></span></div>
+        <div class="disclaimer">* หมายเหตุ: ผลการวิเคราะห์จากระบบ AI เป็นเพียงข้อมูลเบื้องต้นเท่านั้น ห้ามนำเห็ดที่ไม่รู้จักมารับประทานโดยเด็ดขาด</div>
+    </div>
+</div>
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const preview = document.getElementById('preview');
+    let base64Image = "";
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                base64Image = event.target.result.split(',')[1];
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    async function analyzeMushroom() {
+        const apiKey = document.getElementById('apiKey').value.trim();
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultDiv = document.getElementById('result');
+
+        if (!apiKey) {
+            alert('กรุณากรอก Gemini API Key');
+            return;
         }
 
-        // Navigation Logic
-        let currentCard = 0;
-        const totalCards = 7;
+        if (!base64Image) {
+            alert('กรุณาเลือกรูปภาพเห็ด');
+            return;
+        }
 
-        function updateCards() {
-            for (let i = 0; i < totalCards; i++) {
-                const card = document.getElementById(`card-${i}`);
-                card.classList.remove('active', 'prev');
-                
-                if (i === currentCard) {
-                    card.classList.add('active');
-                } else if (i < currentCard) {
-                    card.classList.add('prev');
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerText = 'กำลังวิเคราะห์ข้อมูล...';
+        resultDiv.style.display = 'none';
+
+        const modelName = "Gemini Flash Lite 3.5";
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+        const promptText = `วิเคราะห์ภาพเห็ดนี้แล้วตอบกลับเป็นรูปแบบ JSON ภาษาไทยเท่านั้น โดยใช้โครงสร้างตามนี้:
+{
+    "commonName": "ชื่อภาษาไทยหรือชื่อสามัญ",
+    "scientificName": "ชื่อวิทยาศาสตร์",
+    "safetyLevel": "กินได้" หรือ "ควรระวัง" หรือ "มีพิษอันตราย",
+    "features": "อธิบายลักษณะสำคัญของเห็ด",
+    "lookalikes": "เห็ดคู่แฝดที่อาจสับสนและอันตราย (ถ้ามี)",
+    "usage": "ประโยชน์ การประกอบอาหาร หรือคำแนะนำในการหลีกเลี่ยง"
+}`;
+
+        const payload = {
+            contents: [
+                {
+                    parts: [
+                        { text: promptText },
+                        {
+                            inline_data: {
+                                mime_type: "image/jpeg",
+                                data: base64Image
+                            }
+                        }
+                    ]
                 }
+            ],
+            generationConfig: {
+                response_mime_type: "application/json"
             }
-        }
-
-        function nextCard() {
-            if (currentCard < totalCards - 1) {
-                currentCard++;
-                updateCards();
-            }
-        }
-
-        function prevCard() {
-            if (currentCard > 0) {
-                currentCard--;
-                updateCards();
-            }
-        }
-
-        function goToPage(pageIndex) {
-            currentCard = pageIndex;
-            updateCards();
-        }
-
-        // 🎼 Emotional Piano Synthesizer (5-6 Seconds Phrase)
-        let audioCtx = null;
-        let isPlaying = false;
-        let intervalId = null;
-
-        const pianoFrequencies = {
-            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
-            'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00
         };
 
-        const melodyPattern = [
-            { note: 'C4', duration: 2.5, time: 0 },
-            { note: 'G4', duration: 2.0, time: 0.15 },
-            { note: 'E5', duration: 2.2, time: 0.3 },
-            
-            { note: 'D5', duration: 1.8, time: 1.1 },
-            { note: 'C5', duration: 2.2, time: 1.8 },
-            
-            { note: 'A4', duration: 2.5, time: 2.6 },
-            { note: 'F5', duration: 2.0, time: 2.75 },
-            
-            { note: 'E5', duration: 2.2, time: 3.6 },
-            { note: 'D5', duration: 2.5, time: 4.3 },
-            { note: 'C5', duration: 3.2, time: 5.0 }
-        ];
-
-        function playPianoKey(freq, duration, startTime) {
-            if (!audioCtx) return;
-            setTimeout(() => {
-                try {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-                    gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + duration);
-                } catch(e){}
-            }, startTime * 1000);
-        }
-
-        function playEmotionalPhrase() {
-            melodyPattern.forEach(item => {
-                if (pianoFrequencies[item.note]) {
-                    playPianoKey(pianoFrequencies[item.note], item.duration, item.time);
-                }
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
             });
-        }
 
-        function togglePianoMusic() {
-            const musicBtn = document.getElementById('musicBtn');
-            if (!isPlaying) {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+            const data = await response.json();
 
-                playEmotionalPhrase();
-                intervalId = setInterval(() => {
-                    playEmotionalPhrase();
-                }, 5800);
-
-                musicBtn.innerText = '⏸️ หยุดเพลงบรรเลง';
-                musicBtn.classList.add('playing');
-                isPlaying = true;
+            if (data.error) {
+                alert('เกิดข้อผิดพลาดจาก API: ' + data.error.message);
             } else {
-                clearInterval(intervalId);
-                musicBtn.innerText = '🎹 เปิดเพลงเปียโนบรรเลงซึ้งๆ';
-                musicBtn.classList.remove('playing');
-                isPlaying = false;
+                const textResult = data.candidates[0].content.parts[0].text;
+                const mushroomInfo = JSON.parse(textResult);
+
+                document.getElementById('resName').innerText = mushroomInfo.commonName || "ไม่ทราบชื่อ";
+                document.getElementById('resSciName').innerText = mushroomInfo.scientificName || "-";
+                document.getElementById('resSafety').innerText = mushroomInfo.safetyLevel || "-";
+                document.getElementById('resFeatures').innerText = mushroomInfo.features || "-";
+                document.getElementById('resLookalike').innerText = mushroomInfo.lookalikes || "-";
+                document.getElementById('resUsage').innerText = mushroomInfo.usage || "-";
+
+                resultDiv.className = '';
+                if (mushroomInfo.safetyLevel && mushroomInfo.safetyLevel.includes('กินได้')) {
+                    resultDiv.classList.add('safe');
+                } else if (mushroomInfo.safetyLevel && mushroomInfo.safetyLevel.includes('ระวัง')) {
+                    resultDiv.classList.add('caution');
+                } else {
+                    resultDiv.classList.add('toxic');
+                }
+
+                resultDiv.style.display = 'block';
             }
+        } catch (error) {
+            alert('เกิดข้อผิดพลาดในการวิเคราะห์: ' + error.message);
+        } finally {
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerText = 'วิเคราะห์เห็ด';
         }
-    </script>
+    }
+</script>
 </body>
 </html>
