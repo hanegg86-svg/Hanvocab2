@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mushroom Identifier AI</title>
+    <title>Plant & Flower Identifier AI</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #f4f7f6;
+            background-color: #f4f9f4;
             color: #333;
             padding: 20px;
             display: flex;
@@ -24,11 +24,11 @@
             background: #ffffff;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
         h1, h2 {
             text-align: center;
-            color: #2c3e50;
+            color: #276749;
             margin-bottom: 20px;
         }
         .form-group {
@@ -38,11 +38,12 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: #2d3748;
         }
         input[type="text"], input[type="file"] {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #cbd5e0;
             border-radius: 6px;
         }
         .btn-group {
@@ -53,7 +54,7 @@
         button {
             flex: 1;
             padding: 12px;
-            background-color: #27ae60;
+            background-color: #2f855a;
             color: white;
             border: none;
             border-radius: 6px;
@@ -63,33 +64,33 @@
             transition: background 0.3s;
         }
         button:hover {
-            background-color: #219150;
+            background-color: #22543d;
         }
         button:disabled {
-            background-color: #bdc3c7;
+            background-color: #cbd5e0;
             cursor: not-allowed;
         }
         .btn-camera {
-            background-color: #2980b9;
+            background-color: #3182ce;
         }
         .btn-camera:hover {
-            background-color: #1f618d;
+            background-color: #2b6cb0;
         }
         .btn-capture {
-            background-color: #e67e22;
+            background-color: #dd6b20;
         }
         .btn-capture:hover {
-            background-color: #d35400;
+            background-color: #c05621;
         }
         .btn-save {
-            background-color: #8e44ad;
+            background-color: #6b46c1;
             margin-top: 15px;
         }
         .btn-save:hover {
-            background-color: #71368a;
+            background-color: #553c9a;
         }
         .btn-delete {
-            background-color: #e74c3c;
+            background-color: #e53e3e;
             padding: 6px 10px;
             font-size: 12px;
             margin-top: 8px;
@@ -97,7 +98,7 @@
             width: auto;
         }
         .btn-delete:hover {
-            background-color: #c0392b;
+            background-color: #c53030;
         }
         #webcam {
             width: 100%;
@@ -116,26 +117,14 @@
             margin-top: 25px;
             padding: 15px;
             border-radius: 8px;
+            background-color: #f0fff4;
+            border: 1px solid #9ae6b4;
             display: none;
-        }
-        .safe {
-            background-color: #e8f8f5;
-            border: 1px solid #2ecc71;
-            color: #27ae60;
-        }
-        .caution {
-            background-color: #fef9e7;
-            border: 1px solid #f1c40f;
-            color: #d35400;
-        }
-        .toxic {
-            background-color: #fadbd8;
-            border: 1px solid #e74c3c;
-            color: #c0392b;
         }
         .result-title {
             font-size: 20px;
             font-weight: bold;
+            color: #22543d;
             margin-bottom: 10px;
         }
         .result-item {
@@ -145,14 +134,14 @@
         .disclaimer {
             margin-top: 15px;
             font-size: 12px;
-            color: #7f8c8d;
+            color: #718096;
             font-style: italic;
         }
         
         /* Filter Tabs & Library Styles */
         .library-section {
             margin-top: 35px;
-            border-top: 2px dashed #ddd;
+            border-top: 2px dashed #e2e8f0;
             padding-top: 20px;
         }
         .filter-group {
@@ -165,15 +154,15 @@
         .filter-btn {
             padding: 6px 12px;
             font-size: 13px;
-            background-color: #e0e0e0;
-            color: #333;
+            background-color: #e2e8f0;
+            color: #4a5568;
             border-radius: 20px;
             border: none;
             cursor: pointer;
             white-space: nowrap;
         }
         .filter-btn.active {
-            background-color: #2c3e50;
+            background-color: #276749;
             color: white;
         }
         .library-grid {
@@ -184,8 +173,8 @@
         .library-card {
             display: flex;
             gap: 12px;
-            background: #f9f9f9;
-            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 10px;
             align-items: center;
@@ -194,7 +183,7 @@
         }
         .library-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
         .library-card img {
             width: 75px;
@@ -207,20 +196,22 @@
         }
         .library-card-info h4 {
             font-size: 15px;
-            color: #2c3e50;
+            color: #2d3748;
             margin-bottom: 3px;
         }
         .library-card-info p {
             font-size: 12px;
-            color: #666;
+            color: #718096;
             margin-bottom: 3px;
         }
         .badge {
             display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-size: 11px;
             font-weight: bold;
+            background-color: #c6f6d5;
+            color: #22543d;
         }
 
         /* Modal Styles */
@@ -254,7 +245,7 @@
             font-size: 20px;
             font-weight: bold;
             cursor: pointer;
-            color: #777;
+            color: #a0aec0;
         }
         .modal-img {
             width: 100%;
@@ -268,7 +259,7 @@
 <body>
 
 <div class="container">
-    <h1>🍄 สารานุกรม & วิเคราะห์เห็ด AI</h1>
+    <h1>🌿 สารานุกรม & วิเคราะห์พรรณไม้ AI</h1>
 
     <div class="form-group">
         <label for="apiKey">Gemini API Key:</label>
@@ -276,7 +267,7 @@
     </div>
 
     <div class="form-group">
-        <label for="imageInput">เลือกรูปภาพเห็ด:</label>
+        <label for="imageInput">เลือกรูปภาพต้นไม้ / ดอกไม้:</label>
         <input type="file" id="imageInput" accept="image/*">
     </div>
 
@@ -289,45 +280,46 @@
     <canvas id="canvas" style="display: none;"></canvas>
     <img id="preview" alt="ตัวอย่างรูปภาพ">
 
-    <button id="analyzeBtn" onclick="analyzeMushroom()" style="margin-top: 15px;">วิเคราะห์เห็ด</button>
+    <button id="analyzeBtn" onclick="analyzePlant()" style="margin-top: 15px;">วิเคราะห์พรรณไม้</button>
 
     <div id="result">
         <div class="result-title" id="resName"></div>
         <div class="result-item"><strong>ชื่อวิทยาศาสตร์:</strong> <span id="resSciName"></span></div>
-        <div class="result-item"><strong>ระดับความปลอดภัย:</strong> <span id="resSafety"></span></div>
-        <div class="result-item"><strong>ลักษณะสำคัญ:</strong> <span id="resFeatures"></span></div>
-        <div class="result-item"><strong>เห็ดที่ลักษณะคล้ายกัน (อันตราย):</strong> <span id="resLookalike"></span></div>
-        <div class="result-item"><strong>ข้อมูลโภชนาการ/การนำไปใช้:</strong> <span id="resUsage"></span></div>
-        <button class="btn-save" id="saveBtn" onclick="saveToLibrary()">💾 บันทึกลงคลังเห็ด</button>
-        <div class="disclaimer">* หมายเหตุ: ผลการวิเคราะห์จากระบบ AI เป็นเพียงข้อมูลเบื้องต้นเท่านั้น ห้ามนำเห็ดที่ไม่รู้จักมารับประทานโดยเด็ดขาด</div>
+        <div class="result-item"><strong>หมวดหมู่:</strong> <span id="resCategory"></span></div>
+        <div class="result-item"><strong>คู่มือการดูแล (แสง/น้ำ/ดิน):</strong> <span id="resCare"></span></div>
+        <div class="result-item"><strong>ความปลอดภัย (พิษต่อคน/สัตว์):</strong> <span id="resToxicity"></span></div>
+        <div class="result-item"><strong>จุดเด่น / ประโยชน์ / ความหมาย:</strong> <span id="resHighlights"></span></div>
+        <button class="btn-save" id="saveBtn" onclick="saveToLibrary()">💾 บันทึกลงคลังพรรณไม้</button>
+        <div class="disclaimer">* หมายเหตุ: ผลการวิเคราะห์จากระบบ AI เป็นเพียงข้อมูลเบื้องต้น ควรตรวจสอบความปลอดภัยเพิ่มเติมหากมีสัตว์เลี้ยงในบ้าน</div>
     </div>
 
     <div class="library-section">
-        <h2>📚 คลังเห็ดที่บันทึกไว้</h2>
+        <h2>📚 คลังพรรณไม้ที่บันทึกไว้</h2>
         
         <div class="filter-group">
             <button class="filter-btn active" onclick="setFilter('all', this)">🌐 ทั้งหมด</button>
-            <button class="filter-btn" onclick="setFilter('กินได้', this)">🟢 กินได้</button>
-            <button class="filter-btn" onclick="setFilter('ระวัง', this)">🟡 ควรระวัง</button>
-            <button class="filter-btn" onclick="setFilter('พิษ', this)">🔴 มีพิษอันตราย</button>
+            <button class="filter-btn" onclick="setFilter('ไม้ดอก', this)">🌸 ไม้ดอก</button>
+            <button class="filter-btn" onclick="setFilter('ไม้ใบ', this)">🌿 ไม้ใบ/ประดับ</button>
+            <button class="filter-btn" onclick="setFilter('แคคตัส', this)">🌵 แคคตัส/อวบน้ำ</button>
+            <button class="filter-btn" onclick="setFilter('ไม้ผล', this)">🍎 ไม้ผล/ผัก</button>
         </div>
 
         <div class="library-grid" id="libraryList"></div>
     </div>
 </div>
 
-<!-- Modal สำหรับแสดงข้อมูลรายละเอียดเห็ดแบบเต็ม -->
+<!-- Modal สำหรับแสดงข้อมูลรายละเอียดต้นไม้แบบเต็ม -->
 <div class="modal" id="detailModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
-        <img id="modalImg" class="modal-img" src="" alt="Mushroom Image">
-        <h3 id="modalName" style="color: #2c3e50; margin-bottom: 5px;"></h3>
-        <p style="margin-bottom: 15px;"><em id="modalSciName" style="color: #666;"></em></p>
-        <div class="result-item"><strong>ระดับความปลอดภัย:</strong> <span id="modalSafety"></span></div>
-        <div class="result-item"><strong>ลักษณะสำคัญ:</strong> <span id="modalFeatures"></span></div>
-        <div class="result-item"><strong>เห็ดที่ลักษณะคล้ายกัน (อันตราย):</strong> <span id="modalLookalike"></span></div>
-        <div class="result-item"><strong>ข้อมูลโภชนาการ/การนำไปใช้:</strong> <span id="modalUsage"></span></div>
-        <p style="font-size: 11px; color: #999; margin-top: 15px;">วันที่บันทึก: <span id="modalDate"></span></p>
+        <img id="modalImg" class="modal-img" src="" alt="Plant Image">
+        <h3 id="modalName" style="color: #276749; margin-bottom: 5px;"></h3>
+        <p style="margin-bottom: 15px;"><em id="modalSciName" style="color: #718096;"></em></p>
+        <div class="result-item"><strong>หมวดหมู่:</strong> <span id="modalCategory"></span></div>
+        <div class="result-item"><strong>คู่มือการดูแล:</strong> <span id="modalCare"></span></div>
+        <div class="result-item"><strong>ความปลอดภัย:</strong> <span id="modalToxicity"></span></div>
+        <div class="result-item"><strong>จุดเด่น / ประโยชน์:</strong> <span id="modalHighlights"></span></div>
+        <p style="font-size: 11px; color: #a0aec0; margin-top: 15px;">วันที่บันทึก: <span id="modalDate"></span></p>
     </div>
 </div>
 
@@ -342,7 +334,7 @@
     
     let base64Image = "";
     let mediaStream = null;
-    let currentMushroomData = null;
+    let currentPlantData = null;
     let currentFilter = 'all';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -357,7 +349,7 @@
         localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
     });
 
-    // ฟังก์ชันย่อและบีบอัดรูปภาพ (ลดเหลือความกว้าง/สูงไม่เกิน 500px และคุณภาพ 40%)
+    // ฟังก์ชันย่อและบีบอัดรูปภาพ (ย่อไม่เกิน 500px และบีบอัดคุณภาพเหลือ 40% หรือ 0.4)
     function compressImage(src, maxWidth = 500, maxHeight = 500, quality = 0.4) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -448,7 +440,7 @@
         captureBtn.style.display = 'none';
     }
 
-    async function analyzeMushroom() {
+    async function analyzePlant() {
         const apiKey = apiKeyInput.value.trim();
         const analyzeBtn = document.getElementById('analyzeBtn');
         const resultDiv = document.getElementById('result');
@@ -461,7 +453,7 @@
         localStorage.setItem('gemini_api_key', apiKey);
 
         if (!base64Image) {
-            alert('กรุณาเลือกรูปภาพหรือถ่ายรูปเห็ด');
+            alert('กรุณาเลือกรูปภาพหรือถ่ายรูปต้นไม้/ดอกไม้');
             return;
         }
 
@@ -472,14 +464,14 @@
         const modelName = "gemini-3.5-flash-lite";
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
-        const promptText = `วิเคราะห์ภาพเห็ดนี้แล้วตอบกลับเป็นรูปแบบ JSON ภาษาไทยเท่านั้น โดยใช้โครงสร้างตามนี้:
+        const promptText = `วิเคราะห์ภาพต้นไม้หรือดอกไม้นี้แล้วตอบกลับเป็นรูปแบบ JSON ภาษาไทยเท่านั้น โดยใช้โครงสร้างตามนี้:
 {
     "commonName": "ชื่อภาษาไทยหรือชื่อสามัญ",
     "scientificName": "ชื่อวิทยาศาสตร์",
-    "safetyLevel": "กินได้" หรือ "ควรระวัง" หรือ "มีพิษอันตราย",
-    "features": "อธิบายลักษณะสำคัญของเห็ด",
-    "lookalikes": "เห็ดคู่แฝดที่อาจสับสนและอันตราย (ถ้ามี)",
-    "usage": "ประโยชน์ การประกอบอาหาร หรือคำแนะนำในการหลีกเลี่ยง"
+    "category": "ระบุหมวดหมู่จากตัวเลือกนี้เท่านั้น: ไม้ดอก, ไม้ใบ, แคคตัส, ไม้ผล, หรือ อื่นๆ",
+    "careGuide": "อธิบายวิธีการดูแลสั้นๆ (ปริมาณแสงแดด การให้น้ำ และชนิดดิน)",
+    "toxicity": "ระบุความปลอดภัยว่าเป็นพิษต่อเด็ก สุนัข หรือแมวหรือไม่",
+    "highlights": "อธิบายจุดเด่น ประโยชน์ หรือความหมายสิริมงคล"
 }`;
 
         const payload = {
@@ -516,29 +508,20 @@
                 alert('เกิดข้อผิดพลาดจาก API: ' + data.error.message);
             } else {
                 const textResult = data.candidates[0].content.parts[0].text;
-                const mushroomInfo = JSON.parse(textResult);
+                const plantInfo = JSON.parse(textResult);
 
-                currentMushroomData = {
-                    ...mushroomInfo,
+                currentPlantData = {
+                    ...plantInfo,
                     image: 'data:image/jpeg;base64,' + base64Image,
                     timestamp: new Date().toLocaleDateString('th-TH')
                 };
 
-                document.getElementById('resName').innerText = mushroomInfo.commonName || "ไม่ทราบชื่อ";
-                document.getElementById('resSciName').innerText = mushroomInfo.scientificName || "-";
-                document.getElementById('resSafety').innerText = mushroomInfo.safetyLevel || "-";
-                document.getElementById('resFeatures').innerText = mushroomInfo.features || "-";
-                document.getElementById('resLookalike').innerText = mushroomInfo.lookalikes || "-";
-                document.getElementById('resUsage').innerText = mushroomInfo.usage || "-";
-
-                resultDiv.className = '';
-                if (mushroomInfo.safetyLevel && mushroomInfo.safetyLevel.includes('กินได้')) {
-                    resultDiv.classList.add('safe');
-                } else if (mushroomInfo.safetyLevel && mushroomInfo.safetyLevel.includes('ระวัง')) {
-                    resultDiv.classList.add('caution');
-                } else {
-                    resultDiv.classList.add('toxic');
-                }
+                document.getElementById('resName').innerText = plantInfo.commonName || "ไม่ทราบชื่อ";
+                document.getElementById('resSciName').innerText = plantInfo.scientificName || "-";
+                document.getElementById('resCategory').innerText = plantInfo.category || "-";
+                document.getElementById('resCare').innerText = plantInfo.careGuide || "-";
+                document.getElementById('resToxicity').innerText = plantInfo.toxicity || "-";
+                document.getElementById('resHighlights').innerText = plantInfo.highlights || "-";
 
                 resultDiv.style.display = 'block';
             }
@@ -546,26 +529,26 @@
             alert('เกิดข้อผิดพลาดในการวิเคราะห์: ' + error.message);
         } finally {
             analyzeBtn.disabled = false;
-            analyzeBtn.innerText = 'วิเคราะห์เห็ด';
+            analyzeBtn.innerText = 'วิเคราะห์พรรณไม้';
         }
     }
 
     function saveToLibrary() {
-        if (!currentMushroomData) return;
+        if (!currentPlantData) return;
         
-        let library = JSON.parse(localStorage.getItem('mushroom_library') || '[]');
-        library.unshift(currentMushroomData);
-        localStorage.setItem('mushroom_library', JSON.stringify(library));
+        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
+        library.unshift(currentPlantData);
+        localStorage.setItem('plant_library', JSON.stringify(library));
         
-        alert('บันทึกลงคลังเห็ดเรียบร้อยแล้ว!');
+        alert('บันทึกลงคลังพรรณไม้เรียบร้อยแล้ว!');
         renderLibrary();
     }
 
     function deleteFromLibrary(event, index) {
         event.stopPropagation();
-        let library = JSON.parse(localStorage.getItem('mushroom_library') || '[]');
+        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
         library.splice(index, 1);
-        localStorage.setItem('mushroom_library', JSON.stringify(library));
+        localStorage.setItem('plant_library', JSON.stringify(library));
         renderLibrary();
     }
 
@@ -578,23 +561,20 @@
 
     function renderLibrary() {
         const libraryList = document.getElementById('libraryList');
-        let library = JSON.parse(localStorage.getItem('mushroom_library') || '[]');
+        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
 
         let filteredLibrary = library;
         if (currentFilter !== 'all') {
-            filteredLibrary = library.filter(item => item.safetyLevel && item.safetyLevel.includes(currentFilter));
+            filteredLibrary = library.filter(item => item.category && item.category.includes(currentFilter));
         }
 
         if (filteredLibrary.length === 0) {
-            libraryList.innerHTML = '<p style="text-align: center; color: #888; padding: 15px;">ไม่พบรายการเห็ดในหมวดหมู่นี้</p>';
+            libraryList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 15px;">ไม่พบรายการพรรณไม้ในหมวดหมู่นี้</p>';
             return;
         }
 
         libraryList.innerHTML = filteredLibrary.map((item, index) => {
             const originalIndex = library.indexOf(item);
-            let badgeClass = 'safe';
-            if (item.safetyLevel && item.safetyLevel.includes('ระวัง')) badgeClass = 'caution';
-            if (item.safetyLevel && (item.safetyLevel.includes('พิษ') || item.safetyLevel.includes('อันตราย'))) badgeClass = 'toxic';
 
             return `
                 <div class="library-card" onclick="openModal(${originalIndex})">
@@ -602,8 +582,8 @@
                     <div class="library-card-info">
                         <h4>${item.commonName}</h4>
                         <p><em>${item.scientificName}</em></p>
-                        <p><span class="badge ${badgeClass}">${item.safetyLevel}</span></p>
-                        <p style="font-size: 11px; color: #999;">บันทึกเมื่อ: ${item.timestamp}</p>
+                        <p><span class="badge">${item.category || 'พรรณไม้'}</span></p>
+                        <p style="font-size: 11px; color: #a0aec0;">บันทึกเมื่อ: ${item.timestamp}</p>
                     </div>
                     <button class="btn-delete" onclick="deleteFromLibrary(event, ${originalIndex})">🗑️ ลบ</button>
                 </div>
@@ -612,17 +592,17 @@
     }
 
     function openModal(index) {
-        let library = JSON.parse(localStorage.getItem('mushroom_library') || '[]');
+        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
         const item = library[index];
         if (!item) return;
 
         document.getElementById('modalImg').src = item.image;
         document.getElementById('modalName').innerText = item.commonName || "ไม่ทราบชื่อ";
         document.getElementById('modalSciName').innerText = item.scientificName || "-";
-        document.getElementById('modalSafety').innerText = item.safetyLevel || "-";
-        document.getElementById('modalFeatures').innerText = item.features || "-";
-        document.getElementById('modalLookalike').innerText = item.lookalikes || "-";
-        document.getElementById('modalUsage').innerText = item.usage || "-";
+        document.getElementById('modalCategory').innerText = item.category || "-";
+        document.getElementById('modalCare').innerText = item.careGuide || "-";
+        document.getElementById('modalToxicity').innerText = item.toxicity || "-";
+        document.getElementById('modalHighlights').innerText = item.highlights || "-";
         document.getElementById('modalDate').innerText = item.timestamp || "-";
 
         document.getElementById('detailModal').style.display = 'flex';
