@@ -6,8 +6,8 @@
 (function () {
   'use strict';
 
-  // [MANDATORY REQUIREMENT]: Model MUST be specified as 'Gemini 3.5 Flash - Lite'
-  const GEMINI_MODEL = "Gemini 3.5 Flash - Lite";
+  // [MANDATORY REQUIREMENT]: Model MUST be specified as 'gemini-3.5-flash-lite'
+  const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
   /**
    * Helper: Compress image via canvas before sending to API (Mobile optimization)
@@ -47,7 +47,7 @@
   }
 
   /**
-   * Call Gemini 3.5 Flash - Lite API with satellite image
+   * Call Gemini 3.5 Flash-Lite API with satellite image
    */
   async function analyzeRoofWithGemini(base64Image, apiKey) {
     // Exact model specification as required
@@ -290,7 +290,7 @@
         }
 
         try {
-          window.RoofUI.setLoading(true, `กำลังส่งภาพตรวจสอบกับ ${GEMINI_MODEL}...`);
+          window.RoofUI.setLoading(true, 'กำลังส่งภาพตรวจสอบกับ Gemini 3.5 Flash - Lite...');
           const result = await analyzeRoofWithGemini(state.previewImageBase64, apiKey);
           window.RoofStore.setCurrentAnalysis(result);
           window.RoofUI.showToast('จำแนกประเภทหลังคาสำเร็จ!', 'success');
