@@ -6,8 +6,8 @@
 (function () {
   'use strict';
 
-  // [MANDATORY REQUIREMENT]: Model MUST be specified as 'Gemini Flash Lite 3.5'
-  const GEMINI_MODEL = "Gemini Flash Lite 3.5";
+  // [MANDATORY REQUIREMENT]: Model MUST be specified as 'Gemini 3.5 Flash - Lite'
+  const GEMINI_MODEL = "Gemini 3.5 Flash - Lite";
 
   /**
    * Helper: Compress image via canvas before sending to API (Mobile optimization)
@@ -47,7 +47,7 @@
   }
 
   /**
-   * Call Gemini Flash Lite 3.5 API with satellite image
+   * Call Gemini 3.5 Flash - Lite API with satellite image
    */
   async function analyzeRoofWithGemini(base64Image, apiKey) {
     // Exact model specification as required
@@ -124,7 +124,7 @@
     const data = await response.json();
     const candidate = data.candidates?.[0];
     if (!candidate || !candidate.content?.parts?.[0]?.text) {
-      throw new Error('ไม่พบข้อมูลผลลัพธ์จาก Gemini Flash Lite 3.5');
+      throw new Error('ไม่พบข้อมูลผลลัพธ์จาก Gemini 3.5 Flash - Lite');
     }
 
     const jsonText = candidate.content.parts[0].text.trim();
