@@ -130,7 +130,7 @@
             <div class="scan-choice-grid">
               <!-- ทางเลือกที่ 1: เลือกไฟล์ภาพจากเครื่อง / แกลเลอรี -->
               <div class="scan-choice-box" id="dropzone-satellite" role="button" tabindex="0">
-                <input type="file" id="input-satellite-file" class="file-input-hidden" accept="image/*" capture="environment">
+                <input type="file" id="input-satellite-file" class="file-input-hidden" accept="image/*">
                 <div class="choice-icon-circle upload-circle">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
