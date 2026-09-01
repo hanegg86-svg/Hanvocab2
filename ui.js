@@ -122,18 +122,55 @@
       let imageSection = '';
       if (!hasImage) {
         imageSection = `
-          <div class="card">
-            <div class="upload-dropzone" id="dropzone-satellite">
-              <input type="file" id="input-satellite-file" class="file-input-hidden" accept="image/*" capture="environment">
-              <div class="upload-icon-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
+          <div class="card scan-choice-card">
+            <div class="scan-choice-header">
+              <div class="scan-choice-instruction">เลือกวิธีการนำเข้าภาพถ่ายหลังคา</div>
+            </div>
+
+            <div class="scan-choice-grid">
+              <!-- ทางเลือกที่ 1: เลือกไฟล์ภาพจากเครื่อง / แกลเลอรี -->
+              <div class="scan-choice-box" id="dropzone-satellite" role="button" tabindex="0">
+                <input type="file" id="input-satellite-file" class="file-input-hidden" accept="image/*" capture="environment">
+                <div class="choice-icon-circle upload-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <div class="choice-text-group">
+                  <div class="choice-main-title">เลือกไฟล์ภาพถ่ายดาวเทียม</div>
+                  <div class="choice-sub-title">เลือกภาพจากคลังรูปภาพ หรือไฟล์แคปหน้าจอในเครื่อง</div>
+                </div>
+                <div class="choice-badge">เลือกรูป</div>
               </div>
-              <p class="upload-primary-text">แตะเพื่อเลือกภาพถ่ายดาวเทียม</p>
-              <p class="upload-secondary-text">รองรับ Google Earth, Drone หรือแคปหน้าจอแผนที่</p>
+
+              <div class="scan-divider">
+                <span>หรือ</span>
+              </div>
+
+              <!-- ทางเลือกที่ 2: เปิด Google Earth เพื่อไปหาพิกัดและแคปภาพ -->
+              <a href="https://earth.google.com/web/" target="_blank" rel="noopener noreferrer" class="scan-choice-box earth-box">
+                <div class="choice-icon-circle earth-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                </div>
+                <div class="choice-text-group">
+                  <div class="choice-main-title">เข้าแอป Google Earth</div>
+                  <div class="choice-sub-title">ค้นหาพิกัด ส่องหลังคา และแคปหน้าจอ</div>
+                </div>
+                <div class="choice-badge earth-badge">
+                  <span>เปิดแอป</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </div>
+              </a>
             </div>
           </div>
         `;

@@ -316,7 +316,143 @@ button, input, select, textarea {
   transition: border-color 0.2s ease;
 }
 
-/* 7. Scan Screen Components */
+/* 7. Scan Screen Components & Choices */
+.scan-choice-card {
+  padding: 16px;
+}
+
+.scan-choice-header {
+  margin-bottom: 12px;
+}
+
+.scan-choice-instruction {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.scan-choice-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scan-choice-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.scan-choice-box:active {
+  transform: scale(0.98);
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.scan-choice-box.earth-box {
+  border-color: #e2e8f0;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.scan-choice-box.earth-box:active {
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.choice-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.choice-icon-circle.upload-circle {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.choice-icon-circle.earth-circle {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.choice-icon-circle svg {
+  width: 24px;
+  height: 24px;
+}
+
+.choice-text-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.choice-main-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.choice-sub-title {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.35;
+}
+
+.choice-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.choice-badge.earth-badge {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.scan-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 2px 0;
+}
+
+.scan-divider::before,
+.scan-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.scan-divider span {
+  padding: 0 10px;
+}
+
 .upload-dropzone {
   border: 2px dashed var(--border-strong);
   border-radius: var(--radius-lg);
