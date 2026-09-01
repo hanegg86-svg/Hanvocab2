@@ -1,671 +1,126 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant & Flower Identifier AI</title>
-    
-    <!-- PWA Manifest & iOS Support -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
-    <meta name="theme-color" content="#276749">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #f4f9f4;
-            color: #333;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            max-width: 600px;
-            width: 100%;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-        
-        /* App Cover Header Design */
-        .app-header {
-            text-align: center;
-            padding: 25px 20px;
-            background: linear-gradient(135deg, #276749 0%, #38a169 100%);
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(39, 103, 73, 0.25);
-            position: relative;
-        }
-        .app-header .app-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 18px;
-            border-radius: 50%;
-            backdrop-filter: blur(5px);
-        }
-        .app-header h1 {
-            color: #ffffff;
-            font-size: 22px;
-            margin-bottom: 6px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .app-header p {
-            font-size: 13px;
-            opacity: 0.95;
-            font-weight: 300;
-        }
-
-        h2 {
-            text-align: center;
-            color: #276749;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #2d3748;
-        }
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e0;
-            border-radius: 6px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        button {
-            flex: 1;
-            padding: 12px;
-            background-color: #2f855a;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #22543d;
-        }
-        button:disabled {
-            background-color: #cbd5e0;
-            cursor: not-allowed;
-        }
-        .btn-camera {
-            background-color: #3182ce;
-        }
-        .btn-camera:hover {
-            background-color: #2b6cb0;
-        }
-        .btn-capture {
-            background-color: #dd6b20;
-        }
-        .btn-capture:hover {
-            background-color: #c05621;
-        }
-        .btn-save {
-            background-color: #6b46c1;
-            margin-top: 15px;
-        }
-        .btn-save:hover {
-            background-color: #553c9a;
-        }
-        .btn-delete {
-            background-color: #e53e3e;
-            padding: 6px 10px;
-            font-size: 12px;
-            margin-top: 8px;
-            flex: none;
-            width: auto;
-        }
-        .btn-delete:hover {
-            background-color: #c53030;
-        }
-        #webcam {
-            width: 100%;
-            border-radius: 8px;
-            display: none;
-            margin-top: 10px;
-            background-color: #000;
-        }
-        #preview {
-            max-width: 100%;
-            margin-top: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-        #result {
-            margin-top: 25px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f0fff4;
-            border: 1px solid #9ae6b4;
-            display: none;
-        }
-        .result-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #22543d;
-            margin-bottom: 10px;
-        }
-        .result-item {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        .disclaimer {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #718096;
-            font-style: italic;
-        }
-        
-        /* Filter Tabs & Library Styles */
-        .library-section {
-            margin-top: 35px;
-            border-top: 2px dashed #e2e8f0;
-            padding-top: 20px;
-        }
-        .filter-group {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-        .filter-btn {
-            padding: 6px 12px;
-            font-size: 13px;
-            background-color: #e2e8f0;
-            color: #4a5568;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .filter-btn.active {
-            background-color: #276749;
-            color: white;
-        }
-        .library-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .library-card {
-            display: flex;
-            gap: 12px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 10px;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .library-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-        }
-        .library-card img {
-            width: 75px;
-            height: 75px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-        .library-card-info {
-            flex: 1;
-        }
-        .library-card-info h4 {
-            font-size: 15px;
-            color: #2d3748;
-            margin-bottom: 3px;
-        }
-        .library-card-info p {
-            font-size: 12px;
-            color: #718096;
-            margin-bottom: 3px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            background-color: #c6f6d5;
-            color: #22543d;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #a0aec0;
-        }
-        .modal-img {
-            width: 100%;
-            max-height: 250px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>RoofScan AI - ระบบตรวจสอบและประเมินประเภทหลังคาดาวเทียม</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<div class="container">
-    <!-- App Cover Header Section -->
-    <div class="app-header">
-        <div class="app-icon">🌿📸</div>
-        <h1>PlantScan AI</h1>
-        <p>สแกน ค้นหา และสะสมคลังพรรณไม้ทั่วโลกด้วย AI</p>
-    </div>
-
-    <div class="form-group">
-        <label for="apiKey">Gemini API Key:</label>
-        <input type="text" id="apiKey" placeholder="วาง API Key ของคุณที่นี่ (ระบบจะบันทึกให้อัตโนมัติ)">
-    </div>
-
-    <div class="form-group">
-        <label for="imageInput">เลือกรูปภาพต้นไม้ / ดอกไม้:</label>
-        <input type="file" id="imageInput" accept="image/*">
-    </div>
-
-    <div class="btn-group">
-        <button type="button" class="btn-camera" id="startCamBtn" onclick="startCamera()">📷 เปิดกล้องถ่ายภาพ</button>
-        <button type="button" class="btn-capture" id="captureBtn" onclick="capturePhoto()" style="display: none;">📸 ถ่ายรูป</button>
-    </div>
-
-    <video id="webcam" autoplay playsinline></video>
-    <canvas id="canvas" style="display: none;"></canvas>
-    <img id="preview" alt="ตัวอย่างรูปภาพ">
-
-    <button id="analyzeBtn" onclick="analyzePlant()" style="margin-top: 15px;">วิเคราะห์พรรณไม้</button>
-
-    <div id="result">
-        <div class="result-title" id="resName"></div>
-        <div class="result-item"><strong>ชื่อวิทยาศาสตร์:</strong> <span id="resSciName"></span></div>
-        <div class="result-item"><strong>หมวดหมู่:</strong> <span id="resCategory"></span></div>
-        <div class="result-item"><strong>คู่มือการดูแล (แสง/น้ำ/ดิน):</strong> <span id="resCare"></span></div>
-        <div class="result-item"><strong>ความปลอดภัย (พิษต่อคน/สัตว์):</strong> <span id="resToxicity"></span></div>
-        <div class="result-item"><strong>จุดเด่น / ประโยชน์ / ความหมาย:</strong> <span id="resHighlights"></span></div>
-        <button class="btn-save" id="saveBtn" onclick="saveToLibrary()">💾 บันทึกลงคลังพรรณไม้</button>
-        <div class="disclaimer">* หมายเหตุ: ผลการวิเคราะห์จากระบบ AI เป็นเพียงข้อมูลเบื้องต้น ควรตรวจสอบความปลอดภัยเพิ่มเติมหากมีสัตว์เลี้ยงในบ้าน</div>
-    </div>
-
-    <div class="library-section">
-        <h2>📚 คลังพรรณไม้ที่บันทึกไว้</h2>
-        
-        <div class="filter-group">
-            <button class="filter-btn active" onclick="setFilter('all', this)">🌐 ทั้งหมด</button>
-            <button class="filter-btn" onclick="setFilter('ไม้ดอก', this)">🌸 ไม้ดอก</button>
-            <button class="filter-btn" onclick="setFilter('ไม้ใบ', this)">🌿 ไม้ใบ/ประดับ</button>
-            <button class="filter-btn" onclick="setFilter('แคคตัส', this)">🌵 แคคตัส/อวบน้ำ</button>
-            <button class="filter-btn" onclick="setFilter('ไม้ผล', this)">🍎 ไม้ผล/ผัก</button>
-        </div>
-
-        <div class="library-grid" id="libraryList"></div>
-    </div>
-</div>
-
-<!-- Modal สำหรับแสดงข้อมูลรายละเอียดต้นไม้แบบเต็ม -->
-<div class="modal" id="detailModal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <img id="modalImg" class="modal-img" src="" alt="Plant Image">
-        <h3 id="modalName" style="color: #276749; margin-bottom: 5px;"></h3>
-        <p style="margin-bottom: 15px;"><em id="modalSciName" style="color: #718096;"></em></p>
-        <div class="result-item"><strong>หมวดหมู่:</strong> <span id="modalCategory"></span></div>
-        <div class="result-item"><strong>คู่มือการดูแล:</strong> <span id="modalCare"></span></div>
-        <div class="result-item"><strong>ความปลอดภัย:</strong> <span id="modalToxicity"></span></div>
-        <div class="result-item"><strong>จุดเด่น / ประโยชน์:</strong> <span id="modalHighlights"></span></div>
-        <p style="font-size: 11px; color: #a0aec0; margin-top: 15px;">วันที่บันทึก: <span id="modalDate"></span></p>
-    </div>
-</div>
-
-<script>
-    const imageInput = document.getElementById('imageInput');
-    const preview = document.getElementById('preview');
-    const webcam = document.getElementById('webcam');
-    const canvas = document.getElementById('canvas');
-    const startCamBtn = document.getElementById('startCamBtn');
-    const captureBtn = document.getElementById('captureBtn');
-    const apiKeyInput = document.getElementById('apiKey');
+  <!-- Main Application Wrapper -->
+  <div id="app" class="app-container">
     
-    let base64Image = "";
-    let mediaStream = null;
-    let currentPlantData = null;
-    let currentFilter = 'all';
+    <!-- 1. Top App Bar / Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <img src="icon.png" alt="RoofScan AI Logo">
+        </div>
+        <div class="brand-text">
+          <h1>RoofScan AI</h1>
+          <span class="brand-tag">Satellite Vision</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-open-settings" class="icon-button" aria-label="ตั้งค่า API Key" title="ตั้งค่า Gemini API">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span id="api-status-dot" class="status-dot"></span>
+        </button>
+      </div>
+    </header>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedApiKey = localStorage.getItem('gemini_api_key');
-        if (savedApiKey) {
-            apiKeyInput.value = savedApiKey;
-        }
-        renderLibrary();
-    });
+    <!-- 2. Main Scrollable Content Area -->
+    <main id="main-content" class="app-content">
+      <!-- Dynamic Views will be injected here by ui.js -->
+    </main>
 
-    apiKeyInput.addEventListener('input', () => {
-        localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
-    });
+    <!-- 3. Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="scan" id="tab-scan">
+        <div class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </div>
+        <span class="nav-label">สแกนหลังคา</span>
+      </button>
 
-    // ฟังก์ชันย่อและบีบอัดรูปภาพ (ย่อไม่เกิน 500px และบีบอัดคุณภาพเหลือ 40% หรือ 0.4)
-    function compressImage(src, maxWidth = 500, maxHeight = 500, quality = 0.4) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                let width = img.width;
-                let height = img.height;
+      <button class="nav-item" data-tab="records" id="tab-records">
+        <div class="nav-icon has-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span id="nav-records-count" class="nav-badge">0</span>
+        </div>
+        <span class="nav-label">ประวัติสำรวจ</span>
+      </button>
 
-                if (width > height) {
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-                } else {
-                    if (height > maxHeight) {
-                        width = Math.round((width * maxHeight) / height);
-                        height = maxHeight;
-                    }
-                }
+      <button class="nav-item" data-tab="analytics" id="tab-analytics">
+        <div class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <span class="nav-label">สถิติ & สัดส่วน</span>
+      </button>
+    </nav>
 
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = width;
-                tempCanvas.height = height;
-                const ctx = tempCanvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                const compressedDataUrl = tempCanvas.toDataURL('image/jpeg', quality);
-                resolve(compressedDataUrl);
-            };
-            img.src = src;
-        });
-    }
+    <!-- Modal: Settings / API Key -->
+    <div id="modal-settings" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>ตั้งค่า Gemini API</h2>
+          <button id="btn-close-settings" class="icon-button close-button" aria-label="ปิด">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">กรุณากรอก Google Gemini API Key สำหรับเรียกใช้งานโมเดล <strong>Gemini Flash Lite 3.5</strong> เพื่อวิเคราะห์ภาพถ่ายดาวเทียม</p>
+          <div class="form-group">
+            <label for="input-api-key">Gemini API Key</label>
+            <input type="password" id="input-api-key" placeholder="AIzaSy..." autocomplete="off">
+            <span class="form-hint">คีย์จะถูกบันทึกอย่างปลอดภัยในเครื่องของคุณ (LocalStorage)</span>
+          </div>
+          <div class="model-info-box">
+            <div class="info-tag">Active Model</div>
+            <div class="info-model">Gemini Flash Lite 3.5</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="btn-save-key" class="btn btn-primary">บันทึกคีย์</button>
+        </div>
+      </div>
+    </div>
 
-    imageInput.addEventListener('change', function(e) {
-        stopCamera();
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                const compressedDataUrl = await compressImage(event.target.result, 500, 500, 0.4);
-                preview.src = compressedDataUrl;
-                preview.style.display = 'block';
-                base64Image = compressedDataUrl.split(',')[1];
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+    <!-- Global Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-    async function startCamera() {
-        try {
-            preview.style.display = 'none';
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' },
-                audio: false
-            });
-            webcam.srcObject = mediaStream;
-            webcam.style.display = 'block';
-            startCamBtn.style.display = 'none';
-            captureBtn.style.display = 'block';
-        } catch (err) {
-            alert('ไม่สามารถเข้าถึงกล้องได้: ' + err.message);
-        }
-    }
+    <!-- Fullscreen Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="loading-spinner-box">
+        <div class="spinner"></div>
+        <p id="loading-text">กำลังวิเคราะห์ภาพหลังคาดาวเทียมด้วย Gemini Flash Lite 3.5...</p>
+      </div>
+    </div>
 
-    async function capturePhoto() {
-        if (!mediaStream) return;
-        
-        canvas.width = webcam.videoWidth;
-        canvas.height = webcam.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
-        
-        const rawDataUrl = canvas.toDataURL('image/jpeg');
-        const compressedDataUrl = await compressImage(rawDataUrl, 500, 500, 0.4);
-        
-        preview.src = compressedDataUrl;
-        preview.style.display = 'block';
-        base64Image = compressedDataUrl.split(',')[1];
-        
-        stopCamera();
-    }
+  </div>
 
-    function stopCamera() {
-        if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
-            mediaStream = null;
-        }
-        webcam.style.display = 'none';
-        startCamBtn.style.display = 'block';
-        captureBtn.style.display = 'none';
-    }
-
-    async function analyzePlant() {
-        const apiKey = apiKeyInput.value.trim();
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const resultDiv = document.getElementById('result');
-
-        if (!apiKey) {
-            alert('กรุณากรอก Gemini API Key');
-            return;
-        }
-
-        localStorage.setItem('gemini_api_key', apiKey);
-
-        if (!base64Image) {
-            alert('กรุณาเลือกรูปภาพหรือถ่ายรูปต้นไม้/ดอกไม้');
-            return;
-        }
-
-        analyzeBtn.disabled = true;
-        analyzeBtn.innerText = 'กำลังวิเคราะห์ข้อมูล...';
-        resultDiv.style.display = 'none';
-
-        const modelName = "gemini-3.5-flash-lite";
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-
-        const promptText = `วิเคราะห์ภาพต้นไม้หรือดอกไม้นี้แล้วตอบกลับเป็นรูปแบบ JSON ภาษาไทยเท่านั้น โดยใช้โครงสร้างตามนี้:
-{
-    "commonName": "ชื่อภาษาไทยหรือชื่อสามัญ",
-    "scientificName": "ชื่อวิทยาศาสตร์",
-    "category": "ระบุหมวดหมู่จากตัวเลือกนี้เท่านั้น: ไม้ดอก, ไม้ใบ, แคคตัส, ไม้ผล, หรือ อื่นๆ",
-    "careGuide": "อธิบายวิธีการดูแลสั้นๆ (ปริมาณแสงแดด การให้น้ำ และชนิดดิน)",
-    "toxicity": "ระบุความปลอดภัยว่าเป็นพิษต่อเด็ก สุนัข หรือแมวหรือไม่",
-    "highlights": "อธิบายจุดเด่น ประโยชน์ หรือความหมายสิริมงคล"
-}`;
-
-        const payload = {
-            contents: [
-                {
-                    parts: [
-                        { text: promptText },
-                        {
-                            inline_data: {
-                                mime_type: "image/jpeg",
-                                data: base64Image
-                            }
-                        }
-                    ]
-                }
-            ],
-            generationConfig: {
-                response_mime_type: "application/json"
-            }
-        };
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                alert('เกิดข้อผิดพลาดจาก API: ' + data.error.message);
-            } else {
-                const textResult = data.candidates[0].content.parts[0].text;
-                const plantInfo = JSON.parse(textResult);
-
-                currentPlantData = {
-                    ...plantInfo,
-                    image: 'data:image/jpeg;base64,' + base64Image,
-                    timestamp: new Date().toLocaleDateString('th-TH')
-                };
-
-                document.getElementById('resName').innerText = plantInfo.commonName || "ไม่ทราบชื่อ";
-                document.getElementById('resSciName').innerText = plantInfo.scientificName || "-";
-                document.getElementById('resCategory').innerText = plantInfo.category || "-";
-                document.getElementById('resCare').innerText = plantInfo.careGuide || "-";
-                document.getElementById('resToxicity').innerText = plantInfo.toxicity || "-";
-                document.getElementById('resHighlights').innerText = plantInfo.highlights || "-";
-
-                resultDiv.style.display = 'block';
-            }
-        } catch (error) {
-            alert('เกิดข้อผิดพลาดในการวิเคราะห์: ' + error.message);
-        } finally {
-            analyzeBtn.disabled = false;
-            analyzeBtn.innerText = 'วิเคราะห์พรรณไม้';
-        }
-    }
-
-    function saveToLibrary() {
-        if (!currentPlantData) return;
-        
-        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
-        library.unshift(currentPlantData);
-        localStorage.setItem('plant_library', JSON.stringify(library));
-        
-        alert('บันทึกลงคลังพรรณไม้เรียบร้อยแล้ว!');
-        renderLibrary();
-    }
-
-    function deleteFromLibrary(event, index) {
-        event.stopPropagation();
-        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
-        library.splice(index, 1);
-        localStorage.setItem('plant_library', JSON.stringify(library));
-        renderLibrary();
-    }
-
-    function setFilter(category, btnElement) {
-        currentFilter = category;
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
-        renderLibrary();
-    }
-
-    function renderLibrary() {
-        const libraryList = document.getElementById('libraryList');
-        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
-
-        let filteredLibrary = library;
-        if (currentFilter !== 'all') {
-            filteredLibrary = library.filter(item => item.category && item.category.includes(currentFilter));
-        }
-
-        if (filteredLibrary.length === 0) {
-            libraryList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 15px;">ไม่พบรายการพรรณไม้ในหมวดหมู่นี้</p>';
-            return;
-        }
-
-        libraryList.innerHTML = filteredLibrary.map((item, index) => {
-            const originalIndex = library.indexOf(item);
-
-            return `
-                <div class="library-card" onclick="openModal(${originalIndex})">
-                    <img src="${item.image}" alt="${item.commonName}">
-                    <div class="library-card-info">
-                        <h4>${item.commonName}</h4>
-                        <p><em>${item.scientificName}</em></p>
-                        <p><span class="badge">${item.category || 'พรรณไม้'}</span></p>
-                        <p style="font-size: 11px; color: #a0aec0;">บันทึกเมื่อ: ${item.timestamp}</p>
-                    </div>
-                    <button class="btn-delete" onclick="deleteFromLibrary(event, ${originalIndex})">🗑️ ลบ</button>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function openModal(index) {
-        let library = JSON.parse(localStorage.getItem('plant_library') || '[]');
-        const item = library[index];
-        if (!item) return;
-
-        document.getElementById('modalImg').src = item.image;
-        document.getElementById('modalName').innerText = item.commonName || "ไม่ทราบชื่อ";
-        document.getElementById('modalSciName').innerText = item.scientificName || "-";
-        document.getElementById('modalCategory').innerText = item.category || "-";
-        document.getElementById('modalCare').innerText = item.careGuide || "-";
-        document.getElementById('modalToxicity').innerText = item.toxicity || "-";
-        document.getElementById('modalHighlights').innerText = item.highlights || "-";
-        document.getElementById('modalDate').innerText = item.timestamp || "-";
-
-        document.getElementById('detailModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('detailModal').style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById('detailModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    };
-</script>
+  <!-- Scripts: Loaded in order (Store -> UI -> App Controller) -->
+  <script src="store.js"></script>
+  <script src="ui.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
